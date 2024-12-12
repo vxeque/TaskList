@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] Lista de tareas </title>
+    <link href="css/site.css" rel="stylesheet" />
+</head>
+<body>
+    <header>
+        <nav class="">
+            <div class="container">
+                <a class="NavBar" asp-area="" asp-page="/Index"><h1>Lista de tareas</h1></a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #202020;
+        color: white;
+    }
+
+    .NavBar{
+        display:flex; 
+        justify-content:center; 
+        align-items:center;
+        color:white;
+        font-size:20px;
+        text-decoration:none; 
+    }
+
+    .listNavBar {
+        display:flex;
+        justify-content:center;
+        gap:40px;
+        list-style:none;
+    }
+    .listNavBar li{
+        color:white;
+        background-color:aquamarine;
+        padding:10px;
+        border-radius:7px
+    
+    }
+
+    .listNavBar li a{
+        color:black;
+        text-decoration:none; 
+    }
+
+</style>

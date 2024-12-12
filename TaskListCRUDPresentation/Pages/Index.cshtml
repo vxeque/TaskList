@@ -1,0 +1,305 @@
+﻿@page
+@model IndexModel
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="bodyContend">
+
+    <div>
+        <h2 style="display:flex; justify-content:center;">Nueva Tarea</h2>
+        <form method="post" class="formContend">
+            <div class="">
+                <div class="divContendInput">
+                    <input type="text" id="nameTask" name="NameTask" required placeholder="Titulo tarea" />
+                </div>
+                <div>
+                    <textarea rows="15" cols="35" id="description" name="Description" required placeholder="Descripción..."></textarea>
+                </div>
+                <button type="submit">Añadir tarea</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="listTaskModelContend">
+        <h2 style="display:flex; justify-content:center;">Tareas existentes</h2>
+        <ul class="existing-tasks">
+            @foreach (var task in Model.Tasks)
+            {
+                <li data-task-id="@task.id" data-task-name="@task.nameTask" data-task-description="@task.description">
+                        <div>
+                            <h3>@task.nameTask</h3>
+                            <p>@task.description</p>
+                        </div>
+                        
+                        <div>
+
+                            <!-- Botón para abrir el modal -->
+                            <button class="buttonUpdate" onclick="openModal(this)">Actualizar</button>
+
+
+                            @* <button class="bottonUpdate">Actualizar</button> *@
+
+                            <form method="post" asp-page-handler="Delete" onsubmit="return confirm('¿Estas seguro de que quieres eliminar esta tarea?');">
+                                <input type="hidden" name="taskId" value="@task.id" />
+                                <button class="bottonDelete">Eliminar</button>
+                            </form>
+                        </div>
+                    </li>
+            }
+        </ul>
+    </div>
+</div>
+
+<!-- Modal -->
+<div id="updateModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Actualizar Tarea</h2>
+        <form method="post" asp-page-handler="Update">
+            <input type="hidden" id="taskIdModal" name="taskId" value="" />
+            <div class="form-group">
+                <label for="nameTaskModal">Nombre de la Tarea:</label>
+                <input type="text" id="nameTaskModal" name="nameTask" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="description">Descripción:</label>
+                <textarea id="descriptionModal" name="description" class="form-control"></textarea>
+            </div>
+            <button type="submit" class="buttonSave">Guardar Cambios</button>
+        </form>
+    </div>
+</div>
+
+<style>
+    /* General styles */
+    .bodyContend {
+        /* background-color: aquamarine; */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        /* width:80%; */
+        margin: 0;
+    }
+
+    .formContend {
+        background-color: #404040;
+        border-radius: 8px;
+        padding: 30px;
+        width: 200px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Label and input styles */
+    label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: white;
+    }
+
+    input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #cccccc;
+        border-radius: 4px;
+        font-size: 14px;
+        box-sizing: border-box;
+        transition: border-color 0.3s;
+    }
+
+    input[type="text"]:focus {
+        border-color: #007bff;
+        outline: none;
+    }
+
+    /* Button styles */
+    button {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: #ffffff;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    /* Container for input fields */
+    .divContendInput {
+        margin-bottom: 15px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Existing tasks container */
+    .existing-tasks {
+        width: 300px;
+        background-color: #303030;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .listTaskModelContend ul {
+        list-style: none;
+        padding: 20px;
+        width: 60rem;
+        margin-left: 40px;
+    }
+
+    .listTaskModelContend li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px;
+        background-color: #505050;
+        margin: 10px;
+        border-radius: 8px;
+        display: flex;
+    }
+
+    .bottonUpdate {
+        background-color: darkgreen;
+        margin: 5px;
+        width: 100px;
+        height: 38px;
+    }
+
+    .bottonDelete {
+        background-color: red;
+        margin: 5px;
+        width: 100px;
+        height: 38px;
+    }
+
+    #description {
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #cccccc;
+        border-radius: 10px;
+    }
+
+    /* Estilos para el modal */
+    .modal {
+        display: none; /* Oculto por defecto */
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
+    }
+
+    /* Contenido del modal */
+    .modal-content {
+        background-color: #505050;
+        margin: 15% auto;
+        padding: 20px;
+        border-radius: 8px;
+        width: 50%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Botón de cerrar */
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+        }
+
+    /* Botón guardar */
+    .buttonSave {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+        .buttonSave:hover {
+            background-color: #45a049;
+        }
+
+    /* Estilo de los inputs */
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+    .form-control {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+</style>
+
+<script>
+    // Función para abrir el modal y rellenar los datos
+    function openModal(button) { 
+
+        // Encuentra el <li> correspondiente al botón
+        const listItem = button.closest('li');
+        if (!listItem) {
+            console.error('No se encontró el elemento <li> correspondiente.');
+            return;
+        }
+
+        // Extraer los valores de los atributos data-*
+        const taskId = listItem.getAttribute('data-task-id');
+        const taskName = listItem.getAttribute('data-task-name');
+        const taskDescription = listItem.getAttribute('data-task-description');
+
+     
+        // Rellenar los campos del formulario
+        document.getElementById('taskIdModal').value = taskId || '';
+        document.getElementById('nameTaskModal').value = taskName || '';
+        document.getElementById('descriptionModal').value = taskDescription || '';
+
+        // Mostrar el modal
+        const modal = document.getElementById('updateModal');
+        console.log(modal)
+        modal.style.display = 'block';
+
+    }
+
+    // Función para cerrar el modal
+    function closeModal() {
+        const modal = document.getElementById('updateModal');
+        modal.style.display = 'none';
+    }
+
+    // Cierra el modal si se hace clic fuera del contenido
+    window.onclick = function (event) {
+        const modal = document.getElementById('updateModal');
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    };
+</script>
