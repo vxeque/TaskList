@@ -16,7 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TaskListCRUD.DataAccess\TaskListCRUD.DataAccess.csproj" />
-    <ProjectReference Include="..\TaskListCRUD.Presentation\TaskListCRUD.Presentation.csproj" />
+    <ProjectReference Include="..\TaskListCRUD.Presentation\TaskListCRUDPresentation.csproj" />
   </ItemGroup>
 
 </Project>
